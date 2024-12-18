@@ -8,15 +8,19 @@ export class MainMenuScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('background', 'assets/images/background.png');
-    this.load.audio('menu-music', 'assets/audio/background-music.mp3');
+    this.load.image('background', 'assets/images/mainMenu.png');
+    this.load.audio('menu-music', 'assets/audio/mainMenuSoundtrack.mp3');
   }
 
   create() {
     this.#centerPosition = this.scale.height / 2
+    this.sound.play('menu-music', {
+      loop: true,
+      volume: 0.1
+    });
 
-    this.add.image(400, 300, 'background').setOrigin(0.5);
-    const title = this.add.text(400, this.#centerPosition - 200, 'Arkanoid Game', {
+    this.add.image(this.scale.width / 2,  this.#centerPosition, 'background').setOrigin(0.5);
+    const title = this.add.text(400, this.#centerPosition - 200, 'REGULAR ARKANOID', {
       fontSize: '48px',
       color: '#ffffff',
     }).setOrigin(0.5);

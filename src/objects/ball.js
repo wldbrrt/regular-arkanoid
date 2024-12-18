@@ -55,7 +55,7 @@ export class Ball extends Phaser.Physics.Arcade.Sprite {
     update(paddle) {
         if (!this.#isLaunched) {
             this.x = paddle.x;
-            this.y = paddle.y - paddle.height;
+            this.y = paddle.y - paddle.height - 20;
         }
 
         if (this.y > this.scene.scale.height) {
@@ -67,7 +67,7 @@ export class Ball extends Phaser.Physics.Arcade.Sprite {
         this.#isLaunched = false;
         this.setVelocity(0, 0);
         this.x = paddle.x;
-        this.y = paddle.y - paddle.height;
+        this.y = paddle.y - paddle.height - 20;
     }
 
     hitPaddle(paddle) {
@@ -83,5 +83,9 @@ export class Ball extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityX(2 + Math.random() * 8);
         }
         this.setVelocityY(this.body.velocity.y - 30)
+
+        this.scene.sound.play('hitPaddle', {
+            rate: 2
+        });
     }
 }

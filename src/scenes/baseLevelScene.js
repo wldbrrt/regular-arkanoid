@@ -35,9 +35,25 @@ export class BaseLevelScene extends Phaser.Scene {
         this.load.image('strongBrick', 'assets/images/strongBrick.png');
         this.load.image('strongBrickDamaged', 'assets/images/strongBrickDamaged.png');
         this.load.image('unbreakableBrick', 'assets/images/unbreakableBrick.png');
+
+        this.load.audio('brickBreakSound', 'assets/audio/explosion.mp3');
+        this.load.audio('metalSound', 'assets/audio/metalSound.mp3');
+        this.load.audio('hitPaddle', 'assets/audio/hit.mp3');
+        this.load.audio('hitBrick', 'assets/audio/hitBrick.mp3');
+
+        this.load.spritesheet('brickExplosion', 'assets/sprites/explosion.png', {
+            frameWidth: 95,
+            frameHeight: 95,
+        });
+        this.load.spritesheet('strongBrickSprite', 'assets/sprites/strongBrick.png', {
+            frameWidth: 61,
+            frameHeight: 25,
+        });
+
     }
 
     create() {
+        this.createAnimations()
         this.#centerPosition = this.scale.height / 2
 
         this.physics.world.checkCollision.down = false
@@ -49,6 +65,7 @@ export class BaseLevelScene extends Phaser.Scene {
 
         this.physics.add.collider(this.#ball, this.#paddle, this.hitPaddle, undefined, this);
         this.physics.add.collider(this.#ball, this.#bricks, this.hitBrick, undefined, this);
+
 
         new Controls(this, this.#ball, this.#paddle).initControls()
 
@@ -65,6 +82,26 @@ export class BaseLevelScene extends Phaser.Scene {
             this.destroyAllBricks()
         });
         /////////////////////
+    }
+
+    createAnimations() {
+        this.anims.create({
+            key: 'brickDestroyEffect',
+            frames: this.anims.generateFrameNumbers('brickExplosion', { start: 0, end: 5 }),
+            frameRate: 10,
+            hideOnComplete: true,
+        });
+
+        this.anims.create({
+            key: 'strongBrickNormal',
+            frames: [{ key: 'strongBrickSprite', frame: 0 }],
+        });
+
+        this.anims.create({
+            key: 'strongBrickDamaged',
+            frames: this.anims.generateFrameNumbers('strongBrickSprite', { start: 0, end: 3 }),
+            frameRate: 10
+        });
     }
 
     update() {
