@@ -34,7 +34,7 @@ export class BaseLevelScene extends Phaser.Scene {
         this.load.image('brick', 'assets/images/brick.png');
         this.load.image('strongBrick', 'assets/images/strongBrick.png');
         this.load.image('strongBrickDamaged', 'assets/images/strongBrickDamaged.png');
-        this.load.image('unbreakable', 'assets/images/unbreakable.png');
+        this.load.image('unbreakableBrick', 'assets/images/unbreakableBrick.png');
     }
 
     create() {
@@ -113,7 +113,6 @@ export class BaseLevelScene extends Phaser.Scene {
             y: `-=${this.#centerPosition + 300}`,
             ease: 'Power2',
             duration: 500,
-
         });
     }
 

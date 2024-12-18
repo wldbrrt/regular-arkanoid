@@ -1,9 +1,9 @@
 
     {
-      "rows": 6,
-      "columns": 10,
-      "brickWidth": 70,
-      "brickHeight": 40,
+      "rows": 9,
+      "columns": 11,
+      "brickWidth": 61,
+      "brickHeight": 25,
       "startX": 80,
       "startY": 200,
       "brickTypes": {
@@ -11,12 +11,15 @@
         "strong": { "type": "strong", "texture": "strongBrick", "hp": 2, "score": 20 }
       },
       "schema": [
-        ["normal", "normal", "normal", "strong", "strong", "normal", "normal", "normal", "normal", "normal"],
-        ["normal", "strong", "normal", "normal", "normal", "normal", "strong", "strong", "normal", "normal"],
-        ["normal", "normal", "strong", "normal", "normal", "strong", "normal", "normal", "normal", "normal"],
-        ["normal", "normal", "strong", "normal", "normal", "strong", "normal", "normal", "normal", "normal"],
-        ["strong", "normal", "normal", "strong", "normal", "normal", "normal", "strong", "normal", "strong"],
-        ["normal", "normal", "normal", "normal", "strong", "normal", "normal", "normal", "normal", "strong"]
+        ["normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal"],
+        ["normal", "normal", "normal", "normal", "normal", "strong", "normal", "normal", "normal", "normal", "normal"],
+        ["normal", "normal", "normal", "normal", "strong", "strong", "strong", "normal", "normal", "normal", "normal"],
+        ["normal", "normal", "normal", "strong", "strong", "strong", "strong", "strong", "normal", "normal", "normal"],
+        ["normal", "normal", "normal", "strong", "strong", "strong", "strong", "strong", "normal", "normal", "normal"],
+        ["normal", "normal", "normal", "normal", "strong", "strong", "strong", "normal", "normal", "normal", "normal"],
+        ["normal", "normal", "normal", "normal", "normal", "strong", "normal", "normal", "normal", "normal", "normal"],
+        ["normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal"],
+        ["normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal"]
       ]
     }
 
