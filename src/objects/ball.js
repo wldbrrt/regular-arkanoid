@@ -1,8 +1,8 @@
 import Phaser from "phaser";
 
 export class Ball extends Phaser.Physics.Arcade.Sprite {
-    #initialVelocity = 400
-    #maxVelocity = 1200
+    #initialVelocity = 600
+    #maxVelocity = 1400
     #isLaunched = false
     #damage = 1
 
