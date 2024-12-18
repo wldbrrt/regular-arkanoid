@@ -11,6 +11,7 @@ export class BaseLevelScene extends Phaser.Scene {
     #levelData
     #nextLevelKey
     #unbrokenBricksAmount
+    #centerPosition
 
     constructor(levelKey, levelData, nextLevelKey) {
         super({key: levelKey});
@@ -32,12 +33,16 @@ export class BaseLevelScene extends Phaser.Scene {
         this.load.image('ball', 'assets/images/ball.png');
         this.load.image('brick', 'assets/images/brick.png');
         this.load.image('strongBrick', 'assets/images/strongBrick.png');
+        this.load.image('strongBrickDamaged', 'assets/images/strongBrickDamaged.png');
+        this.load.image('unbreakable', 'assets/images/unbreakable.png');
     }
 
     create() {
+        this.#centerPosition = this.scale.height / 2
+
         this.physics.world.checkCollision.down = false
 
-        this.#paddle = new Paddle(this, 400, 550, 'paddle');
+        this.#paddle = new Paddle(this, 400, 1280, 'paddle');
         this.#ball = new Ball(this, 400, 530, 'ball');
         this.#bricks = new BricksGroup(this.#levelData, this).createBricksGroup()
         this.#unbrokenBricksAmount = this.#bricks.getChildren().length;
@@ -46,13 +51,25 @@ export class BaseLevelScene extends Phaser.Scene {
         this.physics.add.collider(this.#ball, this.#bricks, this.hitBrick, undefined, this);
 
         new Controls(this, this.#ball, this.#paddle).initControls()
+
+
+        //////////////////////
+        const killBricks = this.add.text(100, 100, 'kill', {
+            fontSize: '20px',
+            color: '#00ff00',
+            backgroundColor: '#ffffff',
+            padding: { x: 10, y: 5 },
+        }).setOrigin(0.5).setInteractive();
+
+        killBricks.on('pointerdown', () => {
+            this.destroyAllBricks()
+        });
+        /////////////////////
     }
 
     update() {
         this.#paddle.update();
         this.#ball.update(this.#paddle);
-
-        this.testUpdate()
     }
 
     hitBrick(ball, brick) {
@@ -66,15 +83,17 @@ export class BaseLevelScene extends Phaser.Scene {
     showLevelCompletePopup() {
         this.physics.pause();
 
-        const popup = this.add.rectangle(400, 300, 400, 200, 0x000000, 0.8);
+        const popupYStart = this.scale.height + 300;
+
+        const popup = this.add.rectangle(400, popupYStart, 600, 400, 0x000000, 0.8);
         popup.setStrokeStyle(4, 0xffffff);
 
-        this.add.text(400, 250, 'LEVEL COMPLETE', {
+        const popupText = this.add.text(400, popupYStart - 50, 'LEVEL COMPLETE', {
             fontSize: '24px',
             color: '#ffffff',
         }).setOrigin(0.5);
 
-        const nextLevelButton = this.add.text(400, 320, this.#nextLevelKey ? 'TO THE NEXT LEVEL' : 'TO MAIN MENU', {
+        const nextLevelButton = this.add.text(400, popupYStart + 50, this.#nextLevelKey ? 'TO THE NEXT LEVEL' : 'TO MAIN MENU', {
             fontSize: '20px',
             color: '#00ff00',
             backgroundColor: '#ffffff',
@@ -88,10 +107,14 @@ export class BaseLevelScene extends Phaser.Scene {
                 this.scene.start('MainMenuScene');
             }
         });
-    }
 
-    testUpdate() {
+        this.tweens.add({
+            targets: [popup, popupText, nextLevelButton],
+            y: `-=${this.#centerPosition + 300}`,
+            ease: 'Power2',
+            duration: 500,
 
+        });
     }
 
     destroyAllBricks() {

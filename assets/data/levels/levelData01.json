@@ -1,11 +1,11 @@
 
     {
-      "rows": 5,
+      "rows": 6,
       "columns": 10,
       "brickWidth": 70,
       "brickHeight": 40,
       "startX": 80,
-      "startY": 100,
+      "startY": 200,
       "brickTypes": {
         "normal": { "type": "normal", "texture": "brick", "hp": 1, "score": 10 },
         "strong": { "type": "strong", "texture": "strongBrick", "hp": 2, "score": 20 }
@@ -13,6 +13,7 @@
       "schema": [
         ["normal", "normal", "normal", "strong", "strong", "normal", "normal", "normal", "normal", "normal"],
         ["normal", "strong", "normal", "normal", "normal", "normal", "strong", "strong", "normal", "normal"],
+        ["normal", "normal", "strong", "normal", "normal", "strong", "normal", "normal", "normal", "normal"],
         ["normal", "normal", "strong", "normal", "normal", "strong", "normal", "normal", "normal", "normal"],
         ["strong", "normal", "normal", "strong", "normal", "normal", "normal", "strong", "normal", "strong"],
         ["normal", "normal", "normal", "normal", "strong", "normal", "normal", "normal", "normal", "strong"]
