@@ -50,6 +50,11 @@ export class BaseLevelScene extends Phaser.Scene {
             frameHeight: 25,
         });
 
+        this.load.spritesheet('engineFire', 'assets/sprites/fire.png', {
+            frameWidth: 40,
+            frameHeight: 62,
+        });
+
     }
 
     create() {
@@ -88,7 +93,7 @@ export class BaseLevelScene extends Phaser.Scene {
         this.anims.create({
             key: 'brickDestroyEffect',
             frames: this.anims.generateFrameNumbers('brickExplosion', { start: 0, end: 5 }),
-            frameRate: 10,
+            frameRate: 20,
             hideOnComplete: true,
         });
 
@@ -101,6 +106,13 @@ export class BaseLevelScene extends Phaser.Scene {
             key: 'strongBrickDamaged',
             frames: this.anims.generateFrameNumbers('strongBrickSprite', { start: 0, end: 3 }),
             frameRate: 10
+        });
+
+        this.anims.create({
+            key: 'engineFire',
+            frames: this.anims.generateFrameNumbers('engineFire', { start: 0, end: 3}),
+            frameRate: 20,
+            repeat: -1
         });
     }
 
