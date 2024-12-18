@@ -1,8 +1,13 @@
-import {Brick} from "./brick";
+import {Brick, StrongBrick, UnbreakableBrick} from "./brick";
 
 export class BricksGroup {
     #levelData
     #scene
+    #bricksClasses = {
+        normal: Brick,
+        strong: StrongBrick,
+        unbreakable: UnbreakableBrick,
+    }
 
     constructor(levelData, scene) {
         this.#levelData = levelData
@@ -20,7 +25,8 @@ export class BricksGroup {
 
                     const brickConfig = brickTypes[brickType];
                     if (brickConfig) {
-                        return new Brick(this.#scene, x, y, brickConfig.texture, brickConfig.hp, brickConfig.score);
+                        // return new Brick(this.#scene, x, y, brickConfig.texture, brickConfig.hp, brickConfig.score);
+                        return new this.#bricksClasses[brickType](this.#scene, x, y, brickConfig.texture, brickConfig.hp, brickConfig.score);
                     }
                 }
                 return null;

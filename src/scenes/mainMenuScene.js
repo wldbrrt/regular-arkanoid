@@ -8,8 +8,8 @@ export class MainMenuScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('background', 'assets/images/background.png');
-    this.load.audio('menu-music', 'assets/audio/background-music.mp3');
+    // this.load.image('background', 'assets/images/background.png');
+    // this.load.audio('menu-music', 'assets/audio/background-music.mp3');
   }
 
   create() {
