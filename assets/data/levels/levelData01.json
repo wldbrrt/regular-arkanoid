@@ -8,7 +8,7 @@
       "startY": 100,
       "brickTypes": {
         "normal": { "type": "normal", "texture": "brick", "hp": 1, "score": 10 },
-        "strong": { "type": "strong", "texture": "brick", "hp": 2, "score": 20 }
+        "strong": { "type": "strong", "texture": "strongBrick", "hp": 2, "score": 20 }
       },
       "schema": [
         ["normal", "normal", "normal", "strong", "strong", "normal", "normal", "normal", "normal", "normal"],
