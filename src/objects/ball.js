@@ -4,7 +4,7 @@ export class Ball extends Phaser.Physics.Arcade.Sprite {
     #initialVelocity = 400
     #maxVelocity = 1200
     #isLaunched = false
-    #damage = 2
+    #damage = 1
 
     constructor(scene, x, y, texture) {
         super(scene, x, y, texture);

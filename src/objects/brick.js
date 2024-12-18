@@ -10,27 +10,22 @@ export class Brick extends Phaser.Physics.Arcade.Sprite {
         this.#hp = hp
         this.#score = score
 
-        // Add the brick to the scene and enable physics
         scene.add.existing(this);
-        // scene.physics.add.existing(this);
-
-        // Brick settings
-        // this.setImmovable(true); // Bricks don't move
-        // this.body.allowGravity = false; // Ignore gravity
     }
 
     getScore() {
         return this.#score
     }
 
-    processHit(damage) {
+    processHit(damage, decreaseBricksAmount) {
         this.#hp -= damage;
         if(this.#hp <= 0) {
             this.destroy();
+            decreaseBricksAmount()
         }
     }
 
     destroyBrick() {
-        this.destroy(); // Remove the brick from the scene
+        this.destroy();
     }
 }

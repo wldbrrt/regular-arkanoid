@@ -23,7 +23,7 @@ export class MainMenuScene extends Phaser.Scene {
     }).setOrigin(0.5).setInteractive();
 
     startButton.on('pointerdown', () => {
-      this.scene.start('Level1Scene'); // Go to Level 1
+      this.scene.start('LevelScene01');
     });
   }
 }

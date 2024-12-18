@@ -9,21 +9,6 @@ export class BricksGroup {
         this.#scene = scene
     }
 
-    /*createBricksGroup() {
-        const bricksArray = []
-        for (let row = 0; row < 5; row++) {
-            for (let col = 0; col < 10; col++) {
-                const brickX = 80 + col * 70;
-                const brickY = 100 + row * 40;
-                const brick = new Brick(this.#scene, brickX, brickY, 'brick');
-                bricksArray.push(brick)
-            }
-        }
-        this.bricks = this.#scene.physics.add.staticGroup(bricksArray);
-
-        return this.bricks
-    }*/
-
     createBricksGroup() {
         const { startX, startY, brickWidth, brickHeight, schema, brickTypes } = this.#levelData;
 
@@ -39,10 +24,9 @@ export class BricksGroup {
                     }
                 }
                 return null;
-            })/*.filter(brick => brick !== null);*/
+            })
         });
 
-        // Add bricks to a static group
         this.bricks = this.#scene.physics.add.staticGroup(bricksArray);
         return this.bricks;
     }
