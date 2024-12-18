@@ -38,6 +38,8 @@ export class BaseLevelScene extends Phaser.Scene {
 
         this.load.audio('brickBreakSound', 'assets/audio/explosion.mp3');
         this.load.audio('metalSound', 'assets/audio/metalSound.mp3');
+        this.load.audio('hitPaddle', 'assets/audio/hit.mp3');
+        this.load.audio('hitBrick', 'assets/audio/hitBrick.mp3');
 
         this.load.spritesheet('brickExplosion', 'assets/sprites/explosion.png', {
             frameWidth: 95,

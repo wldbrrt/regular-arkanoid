@@ -45,7 +45,9 @@ export class Brick extends Phaser.Physics.Arcade.Sprite {
     }
 
     playEffects() {
-
+        this.scene.sound.play('hitBrick', {
+            rate: 1
+        });
     }
 }
 
@@ -70,6 +72,7 @@ export class StrongBrick extends Brick {
         if (this.getHp() === 1) {
             this.play('strongBrickDamaged');
         }
+        super.playEffects()
     }
 }
 
@@ -89,6 +92,9 @@ export class UnbreakableBrick extends Brick {
     }
 
     playEffects() {
-        this.scene.sound.play('metalSound');
+        this.scene.sound.play('metalSound', {
+            volume: 0.2,
+            rate: 2
+        });
     }
 }
