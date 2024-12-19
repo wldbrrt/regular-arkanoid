@@ -4,6 +4,8 @@ import {Ball} from '../objects/Ball.js';
 import {Controls} from "../utils/controlls";
 import {BricksGroup} from "../objects/bricksGroup";
 import {ButtonsBuilder} from "../utils/buttonsBuilder";
+import {ScoreController} from "../utils/scoreController";
+import {HpController} from "../utils/hpController";
 
 export class BaseLevelScene extends Phaser.Scene {
     #ball
@@ -14,6 +16,8 @@ export class BaseLevelScene extends Phaser.Scene {
     #nextLevelKey
     #unbrokenBricksAmount
     #centerPosition
+    #scoreController
+    #hpController
 
     constructor(levelKey, levelData, nextLevelKey) {
         super({key: levelKey});
@@ -92,6 +96,8 @@ export class BaseLevelScene extends Phaser.Scene {
         this.physics.add.collider(this.#ball, this.#paddle, this.hitPaddle, undefined, this);
         this.physics.add.collider(this.#ball, this.#bricks, this.hitBrick, undefined, this);
 
+        this.#hpController = new HpController(this, 3, 9)
+        this.#scoreController = new ScoreController(this);
         new Controls(this, this.#ball, this.#paddle).initControls()
 
 
@@ -163,7 +169,7 @@ export class BaseLevelScene extends Phaser.Scene {
     }
 
     hitBrick(ball, brick) {
-        brick.processHit(ball.getDamage(), this.decreaseUnbrokenBricksAmount.bind(this))
+        brick.processHit(ball.getDamage(), this.decreaseUnbrokenBricksAmount.bind(this), this.#scoreController.addPoints.bind(this.#scoreController))
     }
 
     hitPaddle(ball, paddle) {
@@ -297,12 +303,8 @@ export class BaseLevelScene extends Phaser.Scene {
         return this.#ballsGroup
     }
 
-    getScoreController() {
-
-    }
-
     getHpController() {
-
+        return this.#hpController
     }
 
     loadAssets() {

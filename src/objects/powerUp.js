@@ -44,6 +44,7 @@ export class LifePowerUp extends PowerUp {
     }
 
     applyEffect() {
+        this.#scene.getHpController().increaseHp(1)
     }
 }
 
@@ -70,6 +71,9 @@ export class X2PowerUp extends PowerUp {
         let velocityY = originalBall.body.velocity.y
 
         const newBall = new Ball(this.#scene, originalBall.x, originalBall.y, originalBall.texture).setIsLaunched(true)
+        if(originalBall.isDamageBoonOn()){
+            newBall.applyDamageBoon(1, 15000)
+        }
         velocityX += additionalVelocity
         newBall.setVelocity(velocityX, velocityY)
         this.#scene.addBallToGroup(newBall)

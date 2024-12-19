@@ -1,5 +1,5 @@
 import {BaseLevelScene} from "./baseLevelScene";
-import levelData from "../../assets/data/levels/levelData01.json"
+import levelData from "../levels/levelData01.json"
 
 export class LevelScene01 extends BaseLevelScene {
     constructor() {
