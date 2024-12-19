@@ -72,7 +72,7 @@ export class X2PowerUp extends PowerUp {
 
         const newBall = new Ball(this.#scene, originalBall.x, originalBall.y, originalBall.texture).setIsLaunched(true)
         if(originalBall.isDamageBoonOn()){
-            newBall.applyDamageBoon(1, 15000)
+            newBall.applyDamageBoon(2, 15000)
         }
         velocityX += additionalVelocity
         newBall.setVelocity(velocityX, velocityY)

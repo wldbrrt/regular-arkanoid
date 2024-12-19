@@ -4,29 +4,46 @@ export class HpController {
     #hpText;
     #scene;
 
+    static instance
+
     constructor(scene, initialHp = 3, maxHp = 3) {
+        if (HpController.instance) {
+            return HpController.instance;
+        }
+
         this.#scene = scene;
         this.#hp = initialHp;
         this.#maxHp = maxHp;
 
-        this.#hpText = this.#scene.add.text(
-            this.#scene.scale.width -20, 20,
-            `HP: ${this.#hp}`,
-            { fontSize: '32px', color: '#FFFFFF' }
-        ).setOrigin(1, 0);
+        HpController.instance = this;
     }
 
-    decreaseHp(amount = 1) {
+    static getInstance(scene) {
+        if (!HpController.instance) {
+            HpController.instance = new HpController(scene);
+        }
+        return HpController.instance;
+    }
+
+    createHpInfo(scene) {
+        this.#hpText = scene.add.text(
+            20, 60,
+            `Lives: ${this.#hp}`,
+            { fontSize: '32px', color: '#FFFFFF' }
+        ).setOrigin(0, 0);
+    }
+
+    decreaseHp(amount = 1, scene) {
         this.#hp -= amount;
         if (this.#hp < 0) this.#hp = 0;
         this.updateHpText();
 
         if (this.#hp === 0) {
-            this.#scene.showLevelCompletePopup(true);
+            scene.showLevelCompletePopup(true);
         }
     }
 
-    increaseHp(amount = 1) {
+    increaseHp(amount = 1, scene) {
         this.#hp += amount;
         if (this.#hp > this.#maxHp) this.#hp = this.#maxHp;
         this.updateHpText();

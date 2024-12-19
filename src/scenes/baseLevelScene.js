@@ -6,6 +6,7 @@ import {BricksGroup} from "../objects/bricksGroup";
 import {ButtonsBuilder} from "../utils/buttonsBuilder";
 import {ScoreController} from "../utils/scoreController";
 import {HpController} from "../utils/hpController";
+import {VolumeController} from "../utils/volumeController";
 
 export class BaseLevelScene extends Phaser.Scene {
     #ball
@@ -18,6 +19,7 @@ export class BaseLevelScene extends Phaser.Scene {
     #centerPosition
     #scoreController
     #hpController
+    #controlls
 
     constructor(levelKey, levelData, nextLevelKey) {
         super({key: levelKey});
@@ -89,6 +91,7 @@ export class BaseLevelScene extends Phaser.Scene {
 
         this.#paddle = new Paddle(this, 400, 1280, 'paddle');
         this.#ball = new Ball(this, 400, 530, 'ball');
+        this.#ballsGroup = []
         this.addBallToGroup(this.#ball)
         this.#bricks = new BricksGroup(this.#levelData, this,).createBricksGroup()
         this.#unbrokenBricksAmount = this.#bricks.getChildren().length;
@@ -96,9 +99,10 @@ export class BaseLevelScene extends Phaser.Scene {
         this.physics.add.collider(this.#ball, this.#paddle, this.hitPaddle, undefined, this);
         this.physics.add.collider(this.#ball, this.#bricks, this.hitBrick, undefined, this);
 
-        this.#hpController = new HpController(this, 3, 9)
+        HpController.getInstance(this).createHpInfo(this);
         this.#scoreController = new ScoreController(this);
-        new Controls(this, this.#ball, this.#paddle).initControls()
+        this.#controlls = new Controls(this, this.#ball, this.#paddle).initControls()
+        VolumeController.getInstance(this).createControlButton(this);
 
 
         //////////////////////
@@ -109,7 +113,8 @@ export class BaseLevelScene extends Phaser.Scene {
             padding: { x: 10, y: 5 },
         }).setOrigin(0.5).setInteractive();
 
-        killBricks.on('pointerdown', () => {
+        killBricks.on('pointerdown', (pointer, localX, localY, event) => {
+            event.stopPropagation()
             this.destroyAllBricks()
         });
         /////////////////////
@@ -192,8 +197,23 @@ export class BaseLevelScene extends Phaser.Scene {
         }
     }
 
+    restartScene() {
+        this.#ballsGroup.forEach(ball => ball.destroy());
+        this.#paddle.destroy();
+        this.#bricks.clear(true, true);
+        this.#ballsGroup = [];
+        this.#paddle = null;
+        this.#bricks = null;
+
+        this.scene.restart();
+    }
+
     showLevelCompletePopup(isGameOver) {
         this.physics.pause();
+        this.#ballsGroup.forEach(ball => ball.destroy())
+        this.#paddle.destroy()
+
+        this.#controlls.removeControls()
 
         if(isGameOver) {
             this.sound.play('gameOver', {
@@ -241,6 +261,8 @@ export class BaseLevelScene extends Phaser.Scene {
         );
 
         homeButton.on('pointerdown', () => {
+            HpController.getInstance(this).resetHp()
+            this.restartScene()
             this.scene.start('MainMenuScene');
         });
 
@@ -254,8 +276,10 @@ export class BaseLevelScene extends Phaser.Scene {
             this
         );
 
-        replayButton.on('pointerdown', () => {
-            this.scene.restart()
+        replayButton.on('pointerdown', (pointer, localX, localY, event) => {
+            event.stopPropagation();
+            HpController.getInstance(this).resetHp()
+            this.restartScene()
         });
 
         this.tweens.add({

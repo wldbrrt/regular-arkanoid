@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import {BaseLevelScene} from "../scenes/baseLevelScene";
+import {HpController} from "../utils/hpController";
 
 export class Ball extends Phaser.Physics.Arcade.Sprite {
     #initialVelocity = 600
@@ -54,12 +55,6 @@ export class Ball extends Phaser.Physics.Arcade.Sprite {
     }
 
     resetBallToNormal() {
-       /* this.#damage = this.#defaultDamage
-        try{
-            this.play('ballNormal');
-        } catch(err) {}
-        this.#isDamageBoonOn = false
-        this.#damageResetTimeout = null;*/
         this.#scene.getBallsGroup().forEach(ball => {
             ball.setDamage(this.#defaultDamage);
             try{
@@ -122,7 +117,8 @@ export class Ball extends Phaser.Physics.Arcade.Sprite {
         this.x = paddle.x;
         this.y = paddle.y - paddle.height - 20;
 
-        this.#scene.getHpController().decreaseHp(1)
+        this.resetBallToNormal()
+        HpController.getInstance(this.#scene).decreaseHp(1, this.#scene)
     }
 
     processPaddleHit(paddle) {

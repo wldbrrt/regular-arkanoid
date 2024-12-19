@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import {ButtonsBuilder} from "../utils/buttonsBuilder";
+import {VolumeController} from "../utils/volumeController";
 
 export class MainMenuScene extends Phaser.Scene {
   #centerPosition
@@ -11,6 +12,8 @@ export class MainMenuScene extends Phaser.Scene {
   preload() {
     this.load.image('background', 'assets/images/mainMenu.png');
     this.load.image('gameName', 'assets/images/gameName.png');
+    this.load.image('volumeOn', 'assets/images/volumeOn.svg');
+    this.load.image('volumeOff', 'assets/images/volumeOff.svg');
 
     this.load.audio('menu-music', 'assets/audio/mainMenuSoundtrack.mp3');
   }
@@ -24,6 +27,8 @@ export class MainMenuScene extends Phaser.Scene {
 
     this.add.image(this.scale.width / 2,  this.#centerPosition, 'background').setOrigin(0.5);
     const title = this.add.image(400,  -400, 'gameName').setOrigin(0.5);
+
+    VolumeController.getInstance(this).createControlButton(this);
 
     const startButton = ButtonsBuilder.createButton(
         this.scale.width / 2,
