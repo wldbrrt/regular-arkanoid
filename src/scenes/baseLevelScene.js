@@ -3,6 +3,7 @@ import {Paddle} from '../objects/Paddle.js';
 import {Ball} from '../objects/Ball.js';
 import {Controls} from "../utils/controlls";
 import {BricksGroup} from "../objects/bricksGroup";
+import {ButtonsBuilder} from "../utils/buttonsBuilder";
 
 export class BaseLevelScene extends Phaser.Scene {
     #ball
@@ -25,7 +26,7 @@ export class BaseLevelScene extends Phaser.Scene {
         this.#unbrokenBricksAmount -= 1;
 
         if (this.#unbrokenBricksAmount <= 0) {
-            this.showLevelCompletePopup();
+            this.showLevelCompletePopup(false);
         }
     }
 
@@ -42,12 +43,18 @@ export class BaseLevelScene extends Phaser.Scene {
         this.load.image('x2PowerUp', 'assets/images/x2.png')
         this.load.image('slowerPowerUp', 'assets/images/slow.png')
         this.load.image('fasterPowerUp', 'assets/images/fast.png')
+        this.load.image('winPopup', 'assets/images/winPopup.png')
+        this.load.image('gameOverPopup', 'assets/images/gameOverPopup.png')
+        this.load.image('homeIcon', 'assets/images/homeIcon.svg')
+        this.load.image('replayIcon', 'assets/images/replayIcon.svg')
 
         this.load.audio('brickBreakSound', 'assets/audio/explosion.mp3');
         this.load.audio('metalSound', 'assets/audio/metalSound.mp3');
         this.load.audio('hitPaddle', 'assets/audio/hit.mp3');
         this.load.audio('hitBrick', 'assets/audio/hitBrick.mp3');
         this.load.audio('powerUpCollect', 'assets/audio/powerUp.mp3');
+        this.load.audio('levelComplete', 'assets/audio/levelComplete.mp3');
+        this.load.audio('gameOver', 'assets/audio/gameOver.mp3');
 
         this.load.spritesheet('brickExplosion', 'assets/sprites/explosion.png', {
             frameWidth: 95,
@@ -103,44 +110,55 @@ export class BaseLevelScene extends Phaser.Scene {
     }
 
     createAnimations() {
-        this.anims.create({
-            key: 'brickDestroyEffect',
-            frames: this.anims.generateFrameNumbers('brickExplosion', { start: 0, end: 5 }),
-            frameRate: 20,
-            hideOnComplete: true,
-        });
+        if (!this.anims.exists('brickDestroyEffect')) {
+            this.anims.create({
+                key: 'brickDestroyEffect',
+                frames: this.anims.generateFrameNumbers('brickExplosion', {start: 0, end: 5}),
+                frameRate: 20,
+                hideOnComplete: true,
+            });
+        }
 
-        this.anims.create({
-            key: 'strongBrickNormal',
-            frames: [{ key: 'strongBrickSprite', frame: 0 }],
-        });
+        if (!this.anims.exists('strongBrickNormal')) {
+            this.anims.create({
+                key: 'strongBrickNormal',
+                frames: [{key: 'strongBrickSprite', frame: 0}],
+            });
+        }
 
-        this.anims.create({
-            key: 'strongBrickDamaged',
-            frames: this.anims.generateFrameNumbers('strongBrickSprite', { start: 0, end: 3 }),
-            frameRate: 10
-        });
+        if (!this.anims.exists('strongBrickDamaged')) {
+            this.anims.create({
+                key: 'strongBrickDamaged',
+                frames: this.anims.generateFrameNumbers('strongBrickSprite', {start: 0, end: 3}),
+                frameRate: 10
+            });
+        }
 
-        this.anims.create({
-            key: 'engineFire',
-            frames: this.anims.generateFrameNumbers('engineFire', { start: 0, end: 3}),
-            frameRate: 20,
-            repeat: -1
-        });
+        if (!this.anims.exists('engineFire')) {
+            this.anims.create({
+                key: 'engineFire',
+                frames: this.anims.generateFrameNumbers('engineFire', {start: 0, end: 3}),
+                frameRate: 20,
+                repeat: -1
+            });
+        }
 
-        this.anims.create({
-            key: 'ballNormal',
-            frames: [{ key: 'ballSprite', frame: 0 }],
-        });
-        this.anims.create({
-            key: 'ballStrong',
-            frames: [{ key: 'ballSprite', frame: 1 }],
-        });
+        if (!this.anims.exists('ballNormal')) {
+            this.anims.create({
+                key: 'ballNormal',
+                frames: [{key: 'ballSprite', frame: 0}],
+            });
+        }
+        if (!this.anims.exists('ballStrong')) {
+            this.anims.create({
+                key: 'ballStrong',
+                frames: [{key: 'ballSprite', frame: 1}],
+            });
+        }
     }
 
     update() {
         this.#paddle.update();
-        // this.#ball.update(this.#paddle);
         this.#ballsGroup.forEach(ball => ball.update(this.#paddle))
     }
 
@@ -168,36 +186,74 @@ export class BaseLevelScene extends Phaser.Scene {
         }
     }
 
-    showLevelCompletePopup() {
+    showLevelCompletePopup(isGameOver) {
         this.physics.pause();
+
+        if(isGameOver) {
+            this.sound.play('gameOver', {
+                volume: 0.5
+            });
+        } else {
+            this.sound.play('levelComplete', {
+                volume: 0.5
+            });
+        }
 
         const popupYStart = this.scale.height + 300;
 
-        const popup = this.add.rectangle(400, popupYStart, 600, 400, 0x000000, 0.8);
-        popup.setStrokeStyle(4, 0xffffff);
+        const popup = isGameOver
+            ? this.add.image(this.scale.width / 2,  popupYStart, 'gameOverPopup').setOrigin(0.5)
+            : this.add.image(this.scale.width / 2,  popupYStart, 'winPopup').setOrigin(0.5);
 
-        const popupText = this.add.text(400, popupYStart - 50, 'LEVEL COMPLETE', {
-            fontSize: '24px',
-            color: '#ffffff',
-        }).setOrigin(0.5);
-
-        const nextLevelButton = this.add.text(400, popupYStart + 50, this.#nextLevelKey ? 'TO THE NEXT LEVEL' : 'TO MAIN MENU', {
-            fontSize: '20px',
-            color: '#00ff00',
-            backgroundColor: '#ffffff',
-            padding: { x: 10, y: 5 },
-        }).setOrigin(0.5).setInteractive();
+        const nextLevelButton = ButtonsBuilder.createButton(
+            this.scale.width / 2,
+            popupYStart + 50,
+            502,
+            120,
+            'Next Level',
+            0x149DF2,
+            0x149DF2,
+            this
+        );
 
         nextLevelButton.on('pointerdown', () => {
-            if(this.#nextLevelKey) {
              this.scene.start(this.#nextLevelKey);
-            } else {
-                this.scene.start('MainMenuScene');
-            }
+        });
+
+        if(isGameOver || !this.#nextLevelKey) {
+            nextLevelButton.destroy()
+        }
+
+        const homeButton = ButtonsBuilder.createIconButton(
+            this.scale.width / 2 - 100,
+            popupYStart +200,
+            120,
+            'homeIcon',
+            0x149DF2,
+            0x149DF2,
+            this
+        );
+
+        homeButton.on('pointerdown', () => {
+            this.scene.start('MainMenuScene');
+        });
+
+        const replayButton = ButtonsBuilder.createIconButton(
+            this.scale.width / 2 + 100,
+            popupYStart +200,
+            120,
+            'replayIcon',
+            0x149DF2,
+            0x149DF2,
+            this
+        );
+
+        replayButton.on('pointerdown', () => {
+            this.scene.restart()
         });
 
         this.tweens.add({
-            targets: [popup, popupText, nextLevelButton],
+            targets: [popup, homeButton, nextLevelButton, replayButton],
             y: `-=${this.#centerPosition + 300}`,
             ease: 'Power2',
             duration: 500,
