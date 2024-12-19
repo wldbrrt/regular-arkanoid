@@ -3,10 +3,11 @@ export class HpController {
     #maxHp;
     #hpText;
     #scene;
+    #defaultHp
 
     static instance
 
-    constructor(scene, initialHp = 3, maxHp = 3) {
+    constructor(scene, initialHp = 3, maxHp = 9) {
         if (HpController.instance) {
             return HpController.instance;
         }
@@ -14,6 +15,7 @@ export class HpController {
         this.#scene = scene;
         this.#hp = initialHp;
         this.#maxHp = maxHp;
+        this.#defaultHp = 3
 
         HpController.instance = this;
     }
@@ -50,12 +52,12 @@ export class HpController {
     }
 
     resetHp() {
-        this.#hp = this.#maxHp;
+        this.#hp = this.#defaultHp;
         this.updateHpText();
     }
 
     updateHpText() {
-        this.#hpText.setText(`HP: ${this.#hp}`);
+        this.#hpText.setText(`Lives: ${this.#hp}`);
     }
 
     getHp() {
