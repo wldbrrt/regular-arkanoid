@@ -5,6 +5,7 @@ import {LevelScene02} from "./scenes/levelScene02";
 import {LevelScene03} from "./scenes/levelScene03";
 import {LevelScene04} from "./scenes/levelScene04";
 import {LevelScene05} from "./scenes/levelScene05";
+import {PreloaderScene} from "./scenes/preloaderScene";
 
 const config = {
     type: Phaser.AUTO,
@@ -18,7 +19,7 @@ const config = {
     scale: {
       mode: Phaser.Scale.FIT,
     },
-    scene: [MainMenuScene, LevelScene01, LevelScene02, LevelScene03, LevelScene04, LevelScene05],
+    scene: [PreloaderScene, MainMenuScene, LevelScene01, LevelScene02, LevelScene03, LevelScene04, LevelScene05],
 };
 
 const game = new Phaser.Game(config);

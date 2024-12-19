@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import {Ball} from "./ball";
+import {HpController} from "../utils/hpController";
 
 export class PowerUp extends Phaser.Physics.Arcade.Sprite {
     #texture
@@ -44,7 +45,7 @@ export class LifePowerUp extends PowerUp {
     }
 
     applyEffect() {
-        this.#scene.getHpController().increaseHp(1)
+        HpController.getInstance(this.#scene).increaseHp()
     }
 }
 

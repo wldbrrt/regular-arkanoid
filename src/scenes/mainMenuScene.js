@@ -10,12 +10,7 @@ export class MainMenuScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('background', 'assets/images/mainMenu.png');
-    this.load.image('gameName', 'assets/images/gameName.png');
-    this.load.image('volumeOn', 'assets/images/volumeOn.svg');
-    this.load.image('volumeOff', 'assets/images/volumeOff.svg');
 
-    this.load.audio('menu-music', 'assets/audio/mainMenuSoundtrack.mp3');
   }
 
   create() {
