@@ -47,10 +47,6 @@ export class Ball extends Phaser.Physics.Arcade.Sprite {
     }
 
     applyDamageBoon(damage, timer) {
-        /*if (this.#damageResetTimeout) {
-            clearTimeout(this.#damageResetTimeout);
-            this.#damageResetTimeout = null;
-        }*/
         this.clearBallTimeout()
 
         this.#damage = damage;
