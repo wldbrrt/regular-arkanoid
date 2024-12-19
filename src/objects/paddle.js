@@ -15,8 +15,6 @@ export class Paddle extends Phaser.Physics.Arcade.Sprite {
         this.setImmovable(true);
         this.body.allowGravity = false;
 
-        this.cursors = scene.input.keyboard.createCursorKeys();
-
         this.playFireEffects()
     }
 
@@ -35,14 +33,6 @@ export class Paddle extends Phaser.Physics.Arcade.Sprite {
 
     update() {
         try{
-            if (this.cursors.left.isDown) {
-                this.setVelocityX(-this.#paddleSpeed);
-            } else if (this.cursors.right.isDown) {
-                this.setVelocityX(this.#paddleSpeed);
-            } else {
-                this.setVelocityX(0);
-            }
-
             if (this.x < this.width / 2) {
                 this.x = this.width / 2;
             } else if (this.x > this.scene.scale.width - this.width / 2) {
