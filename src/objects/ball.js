@@ -5,6 +5,9 @@ export class Ball extends Phaser.Physics.Arcade.Sprite {
     #maxVelocity = 1400
     #isLaunched = false
     #damage = 1
+    #defaultDamage = 1
+    #damageResetTimeout = null
+    #scene
 
     constructor(scene, x, y, texture) {
         super(scene, x, y, texture);
@@ -16,8 +19,27 @@ export class Ball extends Phaser.Physics.Arcade.Sprite {
         this.setBounce(1);
         this.body.allowGravity = false;
         this.setMaxBallVelocity(this.#maxVelocity)
+        this.play('ballNormal');
 
-        this.scene = scene;
+        this.#scene = scene;
+    }
+
+    applyDamageBoon(damage, timer) {
+        if (this.#damageResetTimeout) {
+            clearTimeout(this.#damageResetTimeout);
+            this.#damageResetTimeout = null;
+        }
+
+        this.#damage = damage;
+        this.play('ballStrong');
+
+        this.#damageResetTimeout = setTimeout(() => this.resetBallToNormal(), timer);
+    }
+
+    resetBallToNormal() {
+        this.#damage = this.#defaultDamage
+        this.play('ballNormal');
+        this.#damageResetTimeout = null;
     }
 
     getDamage(){
@@ -46,7 +68,6 @@ export class Ball extends Phaser.Physics.Arcade.Sprite {
     launch() {
         if (!this.#isLaunched) {
             this.#isLaunched = true;
-            // Launch the ball in a random upward direction
             const randomX = Phaser.Math.Between(-200, 200);
             this.setVelocity(randomX, -this.#initialVelocity);
         }
@@ -58,9 +79,14 @@ export class Ball extends Phaser.Physics.Arcade.Sprite {
             this.y = paddle.y - paddle.height - 20;
         }
 
-        if (this.y > this.scene.scale.height) {
-            this.resetBall(paddle);
+        if (this.y > this.#scene.scale.height) {
+            // this.resetBall(paddle);
+            this.handleFallingOff()
         }
+    }
+
+    handleFallingOff() {
+        this.#scene.onBallFallingOff(this);
     }
 
     resetBall(paddle) {
@@ -70,7 +96,7 @@ export class Ball extends Phaser.Physics.Arcade.Sprite {
         this.y = paddle.y - paddle.height - 20;
     }
 
-    hitPaddle(paddle) {
+    processPaddleHit(paddle) {
         let diff = 0;
 
         if (this.x < paddle.x) {
@@ -84,7 +110,7 @@ export class Ball extends Phaser.Physics.Arcade.Sprite {
         }
         this.setVelocityY(this.body.velocity.y - 30)
 
-        this.scene.sound.play('hitPaddle', {
+        this.#scene.sound.play('hitPaddle', {
             rate: 2
         });
     }

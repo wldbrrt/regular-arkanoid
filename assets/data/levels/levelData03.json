@@ -5,20 +5,28 @@
   "brickHeight": 25,
   "startX": 80,
   "startY": 200,
+  "powerUps": {
+    "faster": "fasterPowerUp",
+    "slower": "slowerPowerUp",
+    "x2": "x2PowerUp",
+    "x3": "x3PowerUp",
+    "damage": "damagePowerUp",
+    "life": "lifePowerUp"
+  },
   "brickTypes": {
     "normal": { "type": "normal", "texture": "brick", "hp": 1, "score": 10 },
     "strong": { "type": "strong", "texture": "strongBrick", "hp": 2, "score": 20 },
     "unbreakable": { "type": "unbreakable", "texture": "unbreakableBrick", "hp": "infinity", "score": 0 }
   },
   "schema": [
+    ["normal", "normal", "normal", "normal", "unbreakable", "unbreakable", "unbreakable", "normal+faster", "normal", "normal", "normal"],
     ["normal", "normal", "normal", "normal", "unbreakable", "unbreakable", "unbreakable", "normal", "normal", "normal", "normal"],
-    ["normal", "normal", "normal", "normal", "unbreakable", "unbreakable", "unbreakable", "normal", "normal", "normal", "normal"],
-    ["normal", "normal", "normal", "strong", "strong", "strong", "strong", "strong", "normal", "normal", "normal"],
+    ["normal", "normal+damage", "normal", "strong+life", "strong", "strong", "strong", "strong", "normal", "normal", "normal"],
     ["normal", "normal", "unbreakable", "unbreakable", "normal", "strong", "normal", "unbreakable", "unbreakable", "normal", "normal"],
-    ["normal", "normal", "unbreakable", "unbreakable", "normal", "strong", "normal", "unbreakable", "unbreakable", "normal", "normal"],
-    ["normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal"],
-    ["normal", "normal", "strong", "normal", "normal", "normal", "normal", "normal", "strong", "normal", "normal"],
-    ["normal", "strong", "strong", "strong", "normal", "normal", "normal", "strong", "strong", "strong", "normal"],
-    ["normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal"]
+    ["normal+x3", "normal", "unbreakable", "unbreakable", "normal", "strong", "normal", "unbreakable", "unbreakable", "normal", "normal"],
+    ["normal", "normal", "normal+faster", "normal", "normal", "normal+damage", "normal", "normal", "normal", "normal", "normal"],
+    ["normal", "normal", "strong", "normal", "normal", "normal", "normal", "normal", "strong+x2", "normal", "normal"],
+    ["normal", "strong", "strong", "strong", "normal", "normal+x3", "normal", "strong", "strong", "strong", "normal"],
+    ["normal+x2", "normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal", "normal+faster", "normal"]
   ]
 }

@@ -4,13 +4,15 @@ export class Brick extends Phaser.Physics.Arcade.Sprite {
     #hp
     #score
     #texture
+    #powerUp
 
-    constructor(scene, x, y, texture, hp, score) {
+    constructor(scene, x, y, texture, hp, score, powerUp = null) {
         super(scene, x, y, texture);
 
         this.#hp = hp
         this.#score = score
         this.#texture = texture
+        this.#powerUp = powerUp
 
         scene.add.existing(this);
     }
@@ -42,12 +44,20 @@ export class Brick extends Phaser.Physics.Arcade.Sprite {
         this.scene.sound.play('brickBreakSound');
 
         this.destroy();
+
+        if (this.#powerUp) {
+            this.dropPowerUp()
+        }
     }
 
     playEffects() {
         this.scene.sound.play('hitBrick', {
             rate: 1
         });
+    }
+
+    dropPowerUp() {
+        this.#powerUp.dropPowerUp()
     }
 }
 
