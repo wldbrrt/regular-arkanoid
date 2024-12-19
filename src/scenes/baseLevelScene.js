@@ -6,6 +6,7 @@ import {BricksGroup} from "../objects/bricksGroup";
 
 export class BaseLevelScene extends Phaser.Scene {
     #ball
+    #ballsGroup = []
     #paddle
     #bricks
     #levelData
@@ -35,11 +36,18 @@ export class BaseLevelScene extends Phaser.Scene {
         this.load.image('strongBrick', 'assets/images/strongBrick.png');
         this.load.image('strongBrickDamaged', 'assets/images/strongBrickDamaged.png');
         this.load.image('unbreakableBrick', 'assets/images/unbreakableBrick.png');
+        this.load.image('lifePowerUp', 'assets/images/heart.png')
+        this.load.image('damagePowerUp', 'assets/images/power.png')
+        this.load.image('x3PowerUp', 'assets/images/x3.png')
+        this.load.image('x2PowerUp', 'assets/images/x2.png')
+        this.load.image('slowerPowerUp', 'assets/images/slow.png')
+        this.load.image('fasterPowerUp', 'assets/images/fast.png')
 
         this.load.audio('brickBreakSound', 'assets/audio/explosion.mp3');
         this.load.audio('metalSound', 'assets/audio/metalSound.mp3');
         this.load.audio('hitPaddle', 'assets/audio/hit.mp3');
         this.load.audio('hitBrick', 'assets/audio/hitBrick.mp3');
+        this.load.audio('powerUpCollect', 'assets/audio/powerUp.mp3');
 
         this.load.spritesheet('brickExplosion', 'assets/sprites/explosion.png', {
             frameWidth: 95,
@@ -49,28 +57,33 @@ export class BaseLevelScene extends Phaser.Scene {
             frameWidth: 61,
             frameHeight: 25,
         });
-
         this.load.spritesheet('engineFire', 'assets/sprites/fire.png', {
             frameWidth: 40,
             frameHeight: 62,
         });
+        this.load.spritesheet('ballSprite', 'assets/sprites/ball.png', {
+            frameWidth: 31,
+            frameHeight: 31
+        });
 
+        this.loadAssets()
     }
 
     create() {
         this.createAnimations()
+        this.createAssets()
         this.#centerPosition = this.scale.height / 2
 
         this.physics.world.checkCollision.down = false
 
         this.#paddle = new Paddle(this, 400, 1280, 'paddle');
         this.#ball = new Ball(this, 400, 530, 'ball');
-        this.#bricks = new BricksGroup(this.#levelData, this).createBricksGroup()
+        this.addBallToGroup(this.#ball)
+        this.#bricks = new BricksGroup(this.#levelData, this,).createBricksGroup()
         this.#unbrokenBricksAmount = this.#bricks.getChildren().length;
 
         this.physics.add.collider(this.#ball, this.#paddle, this.hitPaddle, undefined, this);
         this.physics.add.collider(this.#ball, this.#bricks, this.hitBrick, undefined, this);
-
 
         new Controls(this, this.#ball, this.#paddle).initControls()
 
@@ -114,11 +127,21 @@ export class BaseLevelScene extends Phaser.Scene {
             frameRate: 20,
             repeat: -1
         });
+
+        this.anims.create({
+            key: 'ballNormal',
+            frames: [{ key: 'ballSprite', frame: 0 }],
+        });
+        this.anims.create({
+            key: 'ballStrong',
+            frames: [{ key: 'ballSprite', frame: 1 }],
+        });
     }
 
     update() {
         this.#paddle.update();
-        this.#ball.update(this.#paddle);
+        // this.#ball.update(this.#paddle);
+        this.#ballsGroup.forEach(ball => ball.update(this.#paddle))
     }
 
     hitBrick(ball, brick) {
@@ -126,7 +149,23 @@ export class BaseLevelScene extends Phaser.Scene {
     }
 
     hitPaddle(ball, paddle) {
-        ball.hitPaddle(paddle)
+        ball.processPaddleHit(paddle)
+    }
+
+    onBallFallingOff(ball) {
+        const index = this.#ballsGroup.indexOf(ball);
+        if (index > -1) {
+            this.#ballsGroup.splice(index, 1);
+        }
+
+        if (this.#ballsGroup.length > 0) {
+            ball.destroy();
+            this.#ball = this.#ballsGroup[0];
+        } else {
+            this.addBallToGroup(ball);
+            ball.resetBall(this.#paddle);
+            this.#ball = ball;
+        }
     }
 
     showLevelCompletePopup() {
@@ -165,8 +204,54 @@ export class BaseLevelScene extends Phaser.Scene {
         });
     }
 
+    addBackgroundFilter() {
+        const blackOverlay = this.add.rectangle(
+            this.scale.width / 2,
+            this.scale.height / 2,
+            this.scale.width,
+            this.scale.height,
+            0x000000,
+            0.5
+        );
+    }
+
+    addBallToGroup(ball) {
+        this.#ballsGroup.push(ball);
+        return this
+    }
+
     destroyAllBricks() {
         this.#bricks.getChildren().forEach(child => this.decreaseUnbrokenBricksAmount());
 
+    }
+
+    getPaddle() {
+        return this.#paddle;
+    }
+
+    getBall() {
+        return this.#ball;
+    }
+
+    getBricks() {
+        return this.#bricks
+    }
+
+    getBallsGroup() {
+        return this.#ballsGroup
+    }
+
+    getScoreController() {
+
+    }
+
+    getHpController() {
+
+    }
+
+    loadAssets() {
+    }
+
+    createAssets() {
     }
 }

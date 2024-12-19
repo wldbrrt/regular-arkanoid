@@ -13,7 +13,8 @@ export class Controls {
 
     initControls() {
         this.#scene.input.on('pointerdown', () => {
-            this.#ball.launch();
+            // this.#ball.launch();
+            this.#scene.getBall().launch();
         });
         this.#scene.input.on('pointermove',  pointer => {
 
