@@ -1,0 +1,33 @@
+
+    {
+      "rows": 9,
+      "columns": 11,
+      "brickWidth": 61,
+      "brickHeight": 25,
+      "startX": 80,
+      "startY": 200,
+      "powerUps": {
+        "faster": "fasterPowerUp",
+        "slower": "slowerPowerUp",
+        "x2": "x2PowerUp",
+        "x3": "x3PowerUp",
+        "damage": "damagePowerUp",
+        "life": "lifePowerUp"
+      },
+      "brickTypes": {
+        "normal": { "type": "normal", "texture": "brick", "hp": 1, "score": 10 },
+        "strong": { "type": "strong", "texture": "strongBrick", "hp": 2, "score": 20 }
+      },
+      "schema": [
+        ["normal", "normal", "normal", "normal", "normal", "normal+slower", "normal", "normal", "normal+slower", "normal", "normal"],
+        ["normal", "normal", "normal", "normal", "normal", "strong", "normal", "normal", "normal", "normal", "normal"],
+        ["normal+faster", "normal", "normal+life", "normal", "strong", "strong", "strong", "normal", "normal", "normal", "normal"],
+        ["normal", "normal", "normal", "strong", "strong", "strong", "strong", "strong", "normal", "normal", "normal"],
+        ["normal", "normal", "normal", "strong", "strong", "strong", "strong", "strong", "normal+damage", "normal", "normal"],
+        ["normal", "normal", "normal", "normal", "strong", "strong", "strong", "normal", "normal", "normal", "normal"],
+        ["normal", "normal", "normal", "normal", "normal+damage", "strong", "normal", "normal", "normal", "normal", "normal"],
+        ["normal", "normal", "normal", "normal", "normal", "normal+faster", "normal", "normal", "normal+x3", "normal", "normal"],
+        ["normal+x3", "normal", "normal+x2", "normal", "normal", "normal+damage", "normal", "normal", "normal", "normal", "normal"]
+      ]
+    }
+
