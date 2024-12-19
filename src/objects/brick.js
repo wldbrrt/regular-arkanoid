@@ -25,7 +25,7 @@ export class Brick extends Phaser.Physics.Arcade.Sprite {
         return this.#hp
     }
 
-    processHit(damage, decreaseBricksAmount) {
+    processHit(damage, decreaseBricksAmount, addPoints) {
         this.#hp -= damage;
 
         this.playEffects()
@@ -33,6 +33,7 @@ export class Brick extends Phaser.Physics.Arcade.Sprite {
         if (this.#hp <= 0) {
             this.destroyBrick();
             decreaseBricksAmount()
+            addPoints(this.#score)
         }
 
     }

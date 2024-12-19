@@ -1,4 +1,6 @@
 import Phaser from "phaser";
+import {BaseLevelScene} from "../scenes/baseLevelScene";
+import {HpController} from "../utils/hpController";
 
 export class Ball extends Phaser.Physics.Arcade.Sprite {
     #initialVelocity = 600
@@ -8,6 +10,7 @@ export class Ball extends Phaser.Physics.Arcade.Sprite {
     #defaultDamage = 1
     #damageResetTimeout = null
     #scene
+    #isDamageBoonOn = false
 
     constructor(scene, x, y, texture) {
         super(scene, x, y, texture);
@@ -24,22 +27,46 @@ export class Ball extends Phaser.Physics.Arcade.Sprite {
         this.#scene = scene;
     }
 
-    applyDamageBoon(damage, timer) {
+    isDamageBoonOn() {
+        return this.#isDamageBoonOn;
+    }
+
+    setIsDamageBoonOn(value){
+        this.#isDamageBoonOn = value;
+    }
+
+    resetDamageResetTimeout() {
+        this.#damageResetTimeout = null;
+    }
+
+    clearBallTimeout() {
         if (this.#damageResetTimeout) {
             clearTimeout(this.#damageResetTimeout);
             this.#damageResetTimeout = null;
         }
+    }
+
+    applyDamageBoon(damage, timer) {
+        this.clearBallTimeout()
 
         this.#damage = damage;
-        this.play('ballStrong');
+        try {
+            this.play('ballStrong');
+        } catch (e) {}
+        this.#isDamageBoonOn = true
 
         this.#damageResetTimeout = setTimeout(() => this.resetBallToNormal(), timer);
     }
 
     resetBallToNormal() {
-        this.#damage = this.#defaultDamage
-        this.play('ballNormal');
-        this.#damageResetTimeout = null;
+        this.#scene.getBallsGroup().forEach(ball => {
+            ball.setDamage(this.#defaultDamage);
+            try{
+                ball.play('ballNormal');
+            } catch(err) {}
+            ball.setIsDamageBoonOn(false)
+            ball.resetDamageResetTimeout()
+        })
     }
 
     getDamage(){
@@ -80,7 +107,6 @@ export class Ball extends Phaser.Physics.Arcade.Sprite {
         }
 
         if (this.y > this.#scene.scale.height) {
-            // this.resetBall(paddle);
             this.handleFallingOff()
         }
     }
@@ -94,6 +120,9 @@ export class Ball extends Phaser.Physics.Arcade.Sprite {
         this.setVelocity(0, 0);
         this.x = paddle.x;
         this.y = paddle.y - paddle.height - 20;
+
+        this.resetBallToNormal()
+        HpController.getInstance(this.#scene).decreaseHp(1, this.#scene)
     }
 
     processPaddleHit(paddle) {

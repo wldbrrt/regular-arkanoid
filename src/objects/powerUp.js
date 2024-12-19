@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import {Ball} from "./ball";
+import {HpController} from "../utils/hpController";
 
 export class PowerUp extends Phaser.Physics.Arcade.Sprite {
     #texture
@@ -44,6 +45,7 @@ export class LifePowerUp extends PowerUp {
     }
 
     applyEffect() {
+        HpController.getInstance(this.#scene).increaseHp()
     }
 }
 
@@ -70,6 +72,9 @@ export class X2PowerUp extends PowerUp {
         let velocityY = originalBall.body.velocity.y
 
         const newBall = new Ball(this.#scene, originalBall.x, originalBall.y, originalBall.texture).setIsLaunched(true)
+        if(originalBall.isDamageBoonOn()){
+            newBall.applyDamageBoon(2, 15000)
+        }
         velocityX += additionalVelocity
         newBall.setVelocity(velocityX, velocityY)
         this.#scene.addBallToGroup(newBall)

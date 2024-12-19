@@ -26,22 +26,31 @@ export class Paddle extends Phaser.Physics.Arcade.Sprite {
         return this
     }
 
+    destroy() {
+        super.destroy()
+        this.#leftEffect.destroy()
+        this.#centerEffect.destroy()
+        this.#rightEffect.destroy()
+    }
+
     update() {
-        if (this.cursors.left.isDown) {
-            this.setVelocityX(-this.#paddleSpeed);
-        } else if (this.cursors.right.isDown) {
-            this.setVelocityX(this.#paddleSpeed);
-        } else {
-            this.setVelocityX(0);
-        }
+        try{
+            if (this.cursors.left.isDown) {
+                this.setVelocityX(-this.#paddleSpeed);
+            } else if (this.cursors.right.isDown) {
+                this.setVelocityX(this.#paddleSpeed);
+            } else {
+                this.setVelocityX(0);
+            }
 
-        if (this.x < this.width / 2) {
-            this.x = this.width / 2;
-        } else if (this.x > this.scene.scale.width - this.width / 2) {
-            this.x = this.scene.scale.width - this.width / 2;
-        }
+            if (this.x < this.width / 2) {
+                this.x = this.width / 2;
+            } else if (this.x > this.scene.scale.width - this.width / 2) {
+                this.x = this.scene.scale.width - this.width / 2;
+            }
 
-        this.updateFireEffects()
+            this.updateFireEffects()
+        } catch (err){}
     }
 
     playFireEffects() {
@@ -58,8 +67,8 @@ export class Paddle extends Phaser.Physics.Arcade.Sprite {
     }
 
     updateFireEffects() {
-        this.#leftEffect.setPosition(this.x - 68, this.y + this.height + 0);
+        this.#leftEffect.setPosition(this.x - 68, this.y + this.height);
         this.#centerEffect.setPosition(this.x, this.y + this.height + 5);
-        this.#rightEffect.setPosition(this.x + 68, this.y + this.height + 0);
+        this.#rightEffect.setPosition(this.x + 68, this.y + this.height);
     }
 }
